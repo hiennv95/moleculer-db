@@ -6,11 +6,11 @@
 
 "use strict";
 
-const _ 			= require("lodash");
-const Promise		= require("bluebird");
-const mongodb 		= require("mongodb");
-const MongoClient 	= mongodb.MongoClient;
-const ObjectID 		= mongodb.ObjectID;
+const _ = require("lodash");
+const Promise = require("bluebird");
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
+const ObjectID = mongodb.ObjectID;
 
 class MongoDbAdapter {
 
@@ -23,7 +23,7 @@ class MongoDbAdapter {
 	 */
 	constructor(uri, opts) {
 		this.uri = uri,
-		this.opts = opts;
+			this.opts = opts;
 	}
 
 	/**
@@ -208,7 +208,7 @@ class MongoDbAdapter {
 	 * @memberof MongoDbAdapter
 	 */
 	updateById(_id, update) {
-		return this.collection.findOneAndUpdate({ _id: this.stringToObjectID(_id) }, update, { returnOriginal : false }).then(res => res.value);
+		return this.collection.findOneAndUpdate({ _id: this.stringToObjectID(_id) }, update, { returnOriginal: false }).then(res => res.value);
 	}
 
 	/**
@@ -385,7 +385,7 @@ class MongoDbAdapter {
 	* @memberof MongoDbAdapter
 	* @returns {Object} Modified entity
 	*/
-	beforeSaveTransformID (entity, idField) {
+	beforeSaveTransformID(entity, idField) {
 		let newEntity = _.cloneDeep(entity);
 
 		if (idField !== "_id" && entity[idField] !== undefined) {
@@ -403,12 +403,19 @@ class MongoDbAdapter {
 	* @memberof MongoDbAdapter
 	* @returns {Object} Modified entity
 	*/
-	afterRetrieveTransformID (entity, idField) {
+	afterRetrieveTransformID(entity, idField) {
 		if (idField !== "_id") {
 			entity[idField] = this.objectIDToString(entity["_id"]);
 			delete entity._id;
-		} 
+		}
 		return entity;
+	}
+
+	getCollection() {
+		if (!!this.collection) {
+			return this.collection;
+		}
+		return null
 	}
 }
 
